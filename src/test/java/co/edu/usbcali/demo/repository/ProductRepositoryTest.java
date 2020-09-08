@@ -169,7 +169,7 @@ class ProductRepositoryTest {
 	void findByPriceBetween() {
 		log.info("findByPriceBetween");
 		
-		List<Product> products=productRepository.findByPriceBetween(3000000, 4500000);
+		List<Product> products=productRepository.findByPriceBetween(3000000, 4600000);
 		
 		assertFalse(products.isEmpty());
 		
