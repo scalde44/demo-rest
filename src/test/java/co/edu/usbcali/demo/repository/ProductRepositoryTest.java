@@ -24,7 +24,7 @@ import co.edu.usbcali.demo.domain.Product;
 @TestMethodOrder(OrderAnnotation.class)
 class ProductRepositoryTest {
 
-	private final static String proId = "APPL20";
+	private final static String proId = "APPL60";
 	Logger log = LoggerFactory.getLogger(ProductRepositoryTest.class);
 	
 	@Autowired
