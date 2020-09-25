@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
 		validate(entity);
 
 		if (productRepository.existsById(entity.getProId()) == false) {
-			throw new Exception("El product con id: " + entity.getProId() + " ya existe");
+			throw new Exception("El product con id: " + entity.getProId() + " no existe");
 		}
 
 		return productRepository.save(entity);
