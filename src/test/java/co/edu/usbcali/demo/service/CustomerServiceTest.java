@@ -16,22 +16,21 @@ import org.springframework.test.annotation.Rollback;
 
 import co.edu.usbcali.demo.domain.Customer;
 
-
 @SpringBootTest
 @Rollback(false)
 @TestMethodOrder(OrderAnnotation.class)
 class CustomerServiceTest {
 
-	private final static Logger log=LoggerFactory.getLogger(CustomerServiceTest.class);
-	
-	private final static String email="scalderon1504@gmail.com";
-	
+	private final static Logger log = LoggerFactory.getLogger(CustomerServiceTest.class);
+
+	private final static String email = "scalderon1504@gmail.com";
+
 	@Autowired
 	CustomerService customerService;
-	
+
 	@Test
 	@Order(1)
-	void save() throws Exception{
+	void save() throws Exception {
 		log.info("save");
 
 		Customer customer = new Customer();
@@ -44,7 +43,7 @@ class CustomerServiceTest {
 
 		customerService.save(customer);
 	}
-	
+
 	@Test
 	@Order(2)
 	void findById() throws Exception {
@@ -55,7 +54,7 @@ class CustomerServiceTest {
 		assertTrue(customerOptional.isPresent(), "El cliente no existe");
 
 	}
-	
+
 	@Test
 	@Order(3)
 	void update() throws Exception {
@@ -64,23 +63,23 @@ class CustomerServiceTest {
 		Optional<Customer> customerOptional = customerService.findById(email);
 
 		assertTrue(customerOptional.isPresent(), "El cliente no existe");
-		
-		Customer customer=customerOptional.get();
+
+		Customer customer = customerOptional.get();
 		customer.setEnable("N");
 		customerService.update(customer);
 
 	}
-	
+
 	@Test
 	@Order(4)
-	void delete() throws Exception{
+	void delete() throws Exception {
 		log.info("delete");
 
 		Optional<Customer> customerOptional = customerService.findById(email);
 
 		assertTrue(customerOptional.isPresent(), "El cliente no existe");
-		
-		Customer customer=customerOptional.get();
+
+		Customer customer = customerOptional.get();
 		customerService.delete(customer);
 
 	}

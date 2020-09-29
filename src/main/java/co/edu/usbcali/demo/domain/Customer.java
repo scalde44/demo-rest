@@ -9,34 +9,54 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "customer", schema = "public")
 public class Customer implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@Column(name = "email", unique = true, nullable = false)
+	@NotNull
+	@Email
+	@Size(min = 3, max = 255)
 	private String email;
-	
+
 	@Column(name = "address", nullable = false)
+	@NotNull
+	@Size(min = 3, max = 255)
+	@NotEmpty
 	private String address;
-	
+
 	@Column(name = "enable", nullable = false)
+	@NotNull
+	@Size(min = 1, max = 1)
+	@NotEmpty
 	private String enable;
-	
+
 	@Column(name = "name", nullable = false)
+	@NotNull
+	@Size(min = 4, max = 255)
+	@NotEmpty
 	private String name;
-	
+
 	@Column(name = "phone", nullable = false)
+	@NotNull
+	@Size(min = 6, max = 255)
+	@NotEmpty
 	private String phone;
-	
+
 	@Column(name = "token", nullable = false)
+	@NotNull
+	@Size(max = 255)
+	@NotEmpty
 	private String token;
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
 	private List<ShoppingCart> shoppingCarts = new ArrayList<ShoppingCart>(0);
 
@@ -54,7 +74,6 @@ public class Customer implements java.io.Serializable {
 		this.shoppingCarts = shoppingCarts;
 	}
 
-	
 	public String getEmail() {
 		return this.email;
 	}
@@ -63,7 +82,6 @@ public class Customer implements java.io.Serializable {
 		this.email = email;
 	}
 
-	
 	public String getAddress() {
 		return this.address;
 	}
@@ -72,7 +90,6 @@ public class Customer implements java.io.Serializable {
 		this.address = address;
 	}
 
-	
 	public String getEnable() {
 		return this.enable;
 	}
@@ -81,7 +98,6 @@ public class Customer implements java.io.Serializable {
 		this.enable = enable;
 	}
 
-	
 	public String getName() {
 		return this.name;
 	}
@@ -90,7 +106,6 @@ public class Customer implements java.io.Serializable {
 		this.name = name;
 	}
 
-	
 	public String getPhone() {
 		return this.phone;
 	}
@@ -99,7 +114,6 @@ public class Customer implements java.io.Serializable {
 		this.phone = phone;
 	}
 
-	
 	public String getToken() {
 		return this.token;
 	}
@@ -108,7 +122,6 @@ public class Customer implements java.io.Serializable {
 		this.token = token;
 	}
 
-	
 	public List<ShoppingCart> getShoppingCarts() {
 		return this.shoppingCarts;
 	}
