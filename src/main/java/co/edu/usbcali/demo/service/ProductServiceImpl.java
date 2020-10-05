@@ -2,6 +2,11 @@ package co.edu.usbcali.demo.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -18,6 +23,20 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	ProductRepository productRepository;
+
+	@Autowired
+	Validator validator;
+
+	@Override
+	public void validate(Product entity) throws Exception {
+		if (entity == null) {
+			throw new Exception("El product es nulo");
+		}
+		Set<ConstraintViolation<Product>> constraintViolation = validator.validate(entity);
+		if (constraintViolation.isEmpty() == false) {
+			throw new ConstraintViolationException(constraintViolation);
+		}
+	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -63,26 +82,29 @@ public class ProductServiceImpl implements ProductService {
 		if (productRepository.existsById(entity.getProId()) == false) {
 			throw new Exception("El product con id: " + entity.getProId() + " no existe");
 		}
-		
-		//Valido referencias con otras tablas
-		productRepository.findById(entity.getProId()).ifPresent(product->{
-			if(product.getShoppingProducts()!=null&&product.getShoppingProducts().isEmpty()==false) {
-				throw new RuntimeException("El product con id: "+entity.getProId()+" tiene ShoppingProducts no se puede borrar");
+
+		// Valido referencias con otras tablas
+		productRepository.findById(entity.getProId()).ifPresent(product -> {
+			if (product.getShoppingProducts() != null && product.getShoppingProducts().isEmpty() == false) {
+				throw new RuntimeException(
+						"El product con id: " + entity.getProId() + " tiene ShoppingProducts no se puede borrar");
 			}
 		});
-		
+
 		productRepository.deleteById(entity.getProId());
 	}
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void deleteById(String id) throws Exception {
-		if (id== null || id.isBlank() == true) {
+		if (id == null || id.isBlank() == true) {
 			throw new Exception("El proId es obligatorio");
 		}
-		
-		if(productRepository.existsById(id)) {
+
+		if (productRepository.existsById(id)) {
 			delete(productRepository.findById(id).get());
+		}else {
+			throw new Exception("El product con id: " + id + " no existe");
 		}
 	}
 
@@ -90,31 +112,6 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional(readOnly = true)
 	public Optional<Product> findById(String id) throws Exception {
 		return productRepository.findById(id);
-	}
-
-	@Override
-	public void validate(Product entity) throws Exception {
-		if (entity == null) {
-			throw new Exception("El product es nulo");
-		}
-		if (entity.getDetail() == null || entity.getDetail().isBlank()) {
-			throw new Exception("El detail es obligatorio");
-		}
-		if (entity.getEnable() == null || entity.getEnable().isBlank()) {
-			throw new Exception("El enable es obligatorio");
-		}
-		if (entity.getImage() == null || entity.getImage().isBlank()) {
-			throw new Exception("La imagen es obligatoria");
-		}
-		if (entity.getName() == null || entity.getName().isBlank()) {
-			throw new Exception("El name es obligatorio");
-		}
-		if (entity.getPrice() == null || entity.getPrice()<0) {
-			throw new Exception("El precio es obligatorio");
-		}
-		if (entity.getProId() == null || entity.getProId().isBlank()) {
-			throw new Exception("El proId es obligatorio");
-		}
 	}
 
 	@Override

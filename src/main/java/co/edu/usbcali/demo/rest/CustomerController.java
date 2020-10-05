@@ -54,7 +54,7 @@ public class CustomerController {
 		customer = customerService.update(customer);
 		customerDTO = customerMappper.toCustomerDTO(customer);
 
-		log.info("save");
+		log.info("update");
 		return ResponseEntity.ok().body(customerDTO);
 
 	}

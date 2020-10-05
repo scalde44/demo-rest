@@ -9,6 +9,10 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @author Zathura Code Generator http://zathuracode.org/ www.zathuracode.org
@@ -18,18 +22,43 @@ import javax.persistence.Table;
 @Table(name = "product", schema = "public")
 public class Product implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
+	@Id
+	@Column(name = "pro_id", unique = true, nullable = false)
+	@NotNull
+	@Size(min = 4, max = 255)
+	@NotEmpty
 	private String proId;
-	
+
+	@Column(name = "detail", nullable = false)
+	@NotNull
+	@Size(min = 3, max = 255)
+	@NotEmpty
 	private String detail;
-	
+
+	@Column(name = "enable", nullable = false)
+	@NotNull
+	@Size(min = 1, max = 1)
+	@NotEmpty
 	private String enable;
-	
+
+	@Column(name = "image", nullable = false)
+	@NotNull
+	@Size(min = 10, max = 255)
+	@NotEmpty
 	private String image;
-	
+
+	@Column(name = "name", nullable = false)
+	@NotNull
+	@Size(min = 4, max = 255)
+	@NotEmpty
 	private String name;
-	
+
+	@Column(name = "price", nullable = false)
+	@Min(1)
 	private Integer price;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	private List<ShoppingProduct> shoppingProducts = new ArrayList<ShoppingProduct>(0);
 
 	public Product() {
@@ -46,8 +75,6 @@ public class Product implements java.io.Serializable {
 		this.shoppingProducts = shoppingProducts;
 	}
 
-	@Id
-	@Column(name = "pro_id", unique = true, nullable = false)
 	public String getProId() {
 		return this.proId;
 	}
@@ -56,7 +83,6 @@ public class Product implements java.io.Serializable {
 		this.proId = proId;
 	}
 
-	@Column(name = "detail", nullable = false)
 	public String getDetail() {
 		return this.detail;
 	}
@@ -65,7 +91,6 @@ public class Product implements java.io.Serializable {
 		this.detail = detail;
 	}
 
-	@Column(name = "enable", nullable = false)
 	public String getEnable() {
 		return this.enable;
 	}
@@ -74,7 +99,6 @@ public class Product implements java.io.Serializable {
 		this.enable = enable;
 	}
 
-	@Column(name = "image", nullable = false)
 	public String getImage() {
 		return this.image;
 	}
@@ -83,7 +107,6 @@ public class Product implements java.io.Serializable {
 		this.image = image;
 	}
 
-	@Column(name = "name", nullable = false)
 	public String getName() {
 		return this.name;
 	}
@@ -92,7 +115,6 @@ public class Product implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "price", nullable = false)
 	public Integer getPrice() {
 		return this.price;
 	}
@@ -101,7 +123,6 @@ public class Product implements java.io.Serializable {
 		this.price = price;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	public List<ShoppingProduct> getShoppingProducts() {
 		return this.shoppingProducts;
 	}
