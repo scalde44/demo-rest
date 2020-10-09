@@ -11,7 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @author Zathura Code Generator http://zathuracode.org/ www.zathuracode.org
@@ -21,12 +23,25 @@ import javax.persistence.Table;
 @Table(name = "payment_method", schema = "public")
 public class PaymentMethod implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
+	@Id
+	@Column(name = "pay_id", unique = true, nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer payId;
-	
+
+	@Column(name = "enable", nullable = false)
+	@NotNull
+	@Size(min = 1, max = 1)
+	@NotEmpty
 	private String enable;
-	
+
+	@Column(name = "name", nullable = false)
+	@NotNull
+	@Size(min = 4, max = 255)
+	@NotEmpty
 	private String name;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "paymentMethod")
 	private List<ShoppingCart> shoppingCarts = new ArrayList<ShoppingCart>(0);
 
 	public PaymentMethod() {
@@ -39,9 +54,6 @@ public class PaymentMethod implements java.io.Serializable {
 		this.shoppingCarts = shoppingCarts;
 	}
 
-	@Id
-	@Column(name = "pay_id", unique = true, nullable = false)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getPayId() {
 		return this.payId;
 	}
@@ -50,7 +62,6 @@ public class PaymentMethod implements java.io.Serializable {
 		this.payId = payId;
 	}
 
-	@Column(name = "enable", nullable = false)
 	public String getEnable() {
 		return this.enable;
 	}
@@ -59,7 +70,6 @@ public class PaymentMethod implements java.io.Serializable {
 		this.enable = enable;
 	}
 
-	@Column(name = "name", nullable = false)
 	public String getName() {
 		return this.name;
 	}
@@ -68,7 +78,6 @@ public class PaymentMethod implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "paymentMethod")
 	public List<ShoppingCart> getShoppingCarts() {
 		return this.shoppingCarts;
 	}

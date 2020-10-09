@@ -2,6 +2,11 @@ package co.edu.usbcali.demo.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -18,6 +23,20 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 
 	@Autowired
 	PaymentMethodRepository paymentMethodRepository;
+
+	@Autowired
+	Validator validator;
+
+	@Override
+	public void validate(PaymentMethod entity) throws Exception {
+		if (entity == null) {
+			throw new Exception("El PaymenthMethod es nulo");
+		}
+		Set<ConstraintViolation<PaymentMethod>> constraintViolation = validator.validate(entity);
+		if (constraintViolation.isEmpty() == false) {
+			throw new ConstraintViolationException(constraintViolation);
+		}
+	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -37,9 +56,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public PaymentMethod update(PaymentMethod entity) throws Exception {
 		validate(entity);
-		if (entity.getPayId() == null || entity.getPayId() < 0) {
-			throw new Exception("El payId es obligatorio");
-		}
+
 		if (paymentMethodRepository.existsById(entity.getPayId()) == false) {
 			throw new Exception("El paymenthMethod con payId: " + entity.getPayId() + " no existe");
 		}
@@ -51,13 +68,13 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void delete(PaymentMethod entity) throws Exception {
 		if (entity == null) {
-			throw new Exception("El PaymenthMethod es nulo");
+			throw new Exception("El PaymentMethod es nulo");
 		}
 		if (entity.getPayId() == null || entity.getPayId() < 0) {
 			throw new Exception("El payId es obligatorio");
 		}
 		if (paymentMethodRepository.existsById(entity.getPayId()) == false) {
-			throw new Exception("El paymenthMethod con payId: " + entity.getPayId() + " no existe");
+			throw new Exception("El paymentMethod con payId: " + entity.getPayId() + " no existe");
 		}
 		paymentMethodRepository.findById(entity.getPayId()).ifPresent(paymenthMethod -> {
 			if (paymenthMethod.getShoppingCarts() != null && paymenthMethod.getShoppingCarts().isEmpty() == false) {
@@ -76,6 +93,8 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 		}
 		if (paymentMethodRepository.existsById(id)) {
 			delete(paymentMethodRepository.findById(id).get());
+		} else {
+			throw new Exception("El paymentMethod con id: " + id + " no existe");
 		}
 	}
 
@@ -83,19 +102,6 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 	@Transactional(readOnly = true)
 	public Optional<PaymentMethod> findById(Integer id) throws Exception {
 		return paymentMethodRepository.findById(id);
-	}
-
-	@Override
-	public void validate(PaymentMethod entity) throws Exception {
-		if (entity == null) {
-			throw new Exception("El PaymenthMethod es nulo");
-		}
-		if (entity.getEnable() == null || entity.getEnable().isBlank()) {
-			throw new Exception("El enable es obligatorio");
-		}
-		if (entity.getName() == null || entity.getName().isBlank()) {
-			throw new Exception("El name es obligatorio");
-		}
 	}
 
 	@Override
