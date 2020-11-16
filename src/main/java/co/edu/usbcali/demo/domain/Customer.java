@@ -57,6 +57,12 @@ public class Customer implements java.io.Serializable {
 	@NotEmpty
 	private String token;
 
+	@Column(name = "role", nullable = false)
+	@NotNull
+	@Size(min = 1, max = 1)
+	@NotEmpty
+	private String role;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
 	private List<ShoppingCart> shoppingCarts = new ArrayList<ShoppingCart>(0);
 
@@ -64,13 +70,14 @@ public class Customer implements java.io.Serializable {
 	}
 
 	public Customer(String email, String address, String enable, String name, String phone,
-			List<ShoppingCart> shoppingCarts, String token) {
+			List<ShoppingCart> shoppingCarts, String token, String role) {
 		this.email = email;
 		this.address = address;
 		this.enable = enable;
 		this.name = name;
 		this.phone = phone;
 		this.token = token;
+		this.role = role;
 		this.shoppingCarts = shoppingCarts;
 	}
 
@@ -120,6 +127,14 @@ public class Customer implements java.io.Serializable {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public List<ShoppingCart> getShoppingCarts() {

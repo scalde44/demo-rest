@@ -43,8 +43,7 @@ public class ShoppingCart implements java.io.Serializable {
 
 	
 
-	public ShoppingCart(Integer carId, Customer customer, PaymentMethod paymentMethod, Integer items, Long total,
-			String enable, List<ShoppingProduct> shoppingProducts) {
+	public ShoppingCart(Integer carId, Customer customer, PaymentMethod paymentMethod, Integer items, Long total,String enable, List<ShoppingProduct> shoppingProducts) {
 		super();
 		this.carId = carId;
 		this.customer = customer;
@@ -58,7 +57,7 @@ public class ShoppingCart implements java.io.Serializable {
 
 
 	@Id
-	@Column(name = "car_id", unique = true, nullable = false)
+	@Column(name = "car_id", unique = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getCarId() {
 		return this.carId;
@@ -66,6 +65,15 @@ public class ShoppingCart implements java.io.Serializable {
 
 	public void setCarId(Integer carId) {
 		this.carId = carId;
+	}
+	
+	@Column(name = "enable", nullable = false)
+	public String getEnable() {
+		return this.enable;
+	}
+
+	public void setEnable(String enable) {
+		this.enable = enable;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -106,15 +114,6 @@ public class ShoppingCart implements java.io.Serializable {
 		this.total = total;
 	}
 
-	@Column(name = "enable", nullable = false)
-	public String getEnable() {
-		return this.enable;
-	}
-	
-	public void setEnable(String enable) {
-		this.enable=enable;
-	}
-	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "shoppingCart")
 	public List<ShoppingProduct> getShoppingProducts() {
 		return this.shoppingProducts;
