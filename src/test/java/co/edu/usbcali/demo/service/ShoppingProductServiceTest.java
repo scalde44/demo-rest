@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
+import co.edu.usbcali.demo.domain.ShoppingProduct;
+
 @SpringBootTest
 @Rollback(false)
 class ShoppingProductServiceTest {
@@ -27,10 +29,10 @@ class ShoppingProductServiceTest {
 		total = shoppingProductService.totalShoppingProductByShoppingCart(carId);
 
 		// Assert
-		
+
 		assertTrue(total > 0);
 	}
-	
+
 	@Test
 	void items() {
 		// Arrange
@@ -43,31 +45,28 @@ class ShoppingProductServiceTest {
 
 		assertTrue(items > 0);
 	}
-	
+
 	@Test
-	void shprId() {
-		//Arrange
+	void shpr() {
+		// Arrange
 		Integer carId = 9;
-		String proId="APPL45";
-		List<Integer> lista=null;
+		String proId = "APPL45";
+		ShoppingProduct shoppingProduct = null;
 		// Act
-		lista = shoppingProductService.getShprId(carId, proId);
-		lista.forEach(shpr->{
-			log.info("Id: "+shpr);
-		});
+		shoppingProduct = shoppingProductService.getShprByCarPro(carId, proId);
 		// Assert
-		assertTrue(lista.size() > 0);
+		assertTrue(shoppingProduct != null);
 	}
-	
+
 	@Test
 	void shprIdByCarId() {
-		//Arrange
+		// Arrange
 		Integer carId = 9;
-		List<Integer> lista=null;
+		List<Integer> lista = null;
 		// Act
 		lista = shoppingProductService.getShprIdByCarId(carId);
-		lista.forEach(shpr->{
-			log.info("Id: "+shpr);
+		lista.forEach(shpr -> {
+			log.info("Id: " + shpr);
 		});
 		// Assert
 		assertTrue(lista.size() > 0);

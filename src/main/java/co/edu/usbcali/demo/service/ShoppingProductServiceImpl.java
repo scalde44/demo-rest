@@ -143,10 +143,7 @@ public class ShoppingProductServiceImpl implements ShoppingProductService {
 		return shoppingProductRepository.totalItems(carId);
 	}
 
-	@Override
-	public List<Integer> getShprId(Integer carId, String proId) {
-		return shoppingProductRepository.getShprId(carId, proId);
-	}
+	
 
 	@Override
 	public List<Integer> getShprIdByCarId(Integer carId) {
@@ -156,5 +153,10 @@ public class ShoppingProductServiceImpl implements ShoppingProductService {
 	@Override
 	public List<ShoppingProduct> findShprByCarId(Integer carId) {
 		return shoppingProductRepository.findShprByCarId(carId);
+	}
+
+	@Override
+	public ShoppingProduct getShprByCarPro(Integer carId, String proId) {
+		return shoppingProductRepository.getShprByCarPro(carId, proId);
 	}
 }

@@ -2,6 +2,8 @@ package co.edu.usbcali.demo.rest;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.usbcali.demo.domain.ShoppingCart;
 import co.edu.usbcali.demo.domain.ShoppingProduct;
+import co.edu.usbcali.demo.dto.AddShprDTO;
+import co.edu.usbcali.demo.dto.EmailDTO;
+import co.edu.usbcali.demo.dto.FinalizarCompraDTO;
 import co.edu.usbcali.demo.dto.ShoppingCartDTO;
 import co.edu.usbcali.demo.dto.ShoppingProductDTO;
 import co.edu.usbcali.demo.mapper.ShoppingCartMapper;
@@ -40,20 +46,20 @@ public class CartController {
 	@Autowired
 	ShoppingCartMapper shoppingCartMapper;
 
-	@PostMapping("/createCart/{email}")
-	public ResponseEntity<?> createCart(@PathVariable("email") String email) throws Exception {
+	@PostMapping("/createCart")
+	public ResponseEntity<?> createCart(@Valid @RequestBody EmailDTO emailDTO) throws Exception {
 
-		ShoppingCart shoppingCart = cartService.createCart(email);
+		ShoppingCart shoppingCart = cartService.createCart(emailDTO.getEmail());
 		ShoppingCartDTO shoppingCartDTO = shoppingCartMapper.toShoppingCartDTO(shoppingCart);
 		log.info("createCart");
 		return ResponseEntity.ok().body(shoppingCartDTO);
 	}
 
-	@PostMapping("/addProduct/{carId}/{proId}/{quantity}")
-	public ResponseEntity<?> addProduct(@PathVariable("carId") Integer carId, @PathVariable("proId") String proId,
-			@PathVariable("quantity") Integer quantity) throws Exception {
+	@PostMapping("/addProduct")
+	public ResponseEntity<?> addProduct(@Valid @RequestBody AddShprDTO addShprDTO) throws Exception {
 
-		ShoppingProduct shoppingProduct = cartService.addProduct(carId, proId, quantity);
+		ShoppingProduct shoppingProduct = cartService.addProduct(addShprDTO.getCarId(), addShprDTO.getProId(),
+				addShprDTO.getQuantity());
 		ShoppingProductDTO shoppingProductDTO = shoppingProductMapper.toShoppingProductDTO(shoppingProduct);
 		log.info("addProduct");
 		return ResponseEntity.ok().body(shoppingProductDTO);
@@ -105,11 +111,12 @@ public class CartController {
 
 	}
 
-	@PutMapping("/finalizarCompra/{carId}/{payId}")
-	public ResponseEntity<?> finalizarCompra(@PathVariable("carId") Integer carId, @PathVariable("payId") Integer payId)
+	@PutMapping("/finalizarCompra")
+	public ResponseEntity<?> finalizarCompra(@Valid @RequestBody FinalizarCompraDTO finalizarCompraDTO)
 			throws Exception {
 
-		ShoppingCart shoppingCart = cartService.finalizarCompra(carId, payId);
+		ShoppingCart shoppingCart = cartService.finalizarCompra(finalizarCompraDTO.getCarId(),
+				finalizarCompraDTO.getPayId());
 		ShoppingCartDTO shoppingCartDTO = shoppingCartMapper.toShoppingCartDTO(shoppingCart);
 		log.info("finalizarCompra");
 		return ResponseEntity.ok().body(shoppingCartDTO);

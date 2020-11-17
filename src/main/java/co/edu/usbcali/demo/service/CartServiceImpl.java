@@ -32,8 +32,8 @@ public class CartServiceImpl implements CartService {
 	ShoppingProductService shoppingProductService;
 
 	@Autowired
-	PaymentMethodService paymentMethodService; 
-	
+	PaymentMethodService paymentMethodService;
+
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public ShoppingCart createCart(String email) throws Exception {
@@ -67,9 +67,11 @@ public class CartServiceImpl implements CartService {
 
 		ShoppingCart shoppingCart = null;
 		Product product = null;
+		ShoppingProduct shoppingProduct = null;
 		Long totalShoppingProduct = 0L;
 		Long totalShoppingCart = 0L;
 		Integer itemsShoppingCart = 0;
+		Integer cantidadShpr = 0;
 
 		if (carId == null || carId <= 0) {
 			throw new Exception("El carId es nulo o menor a cero");
@@ -103,19 +105,27 @@ public class CartServiceImpl implements CartService {
 			throw new Exception("El product esta inhabilitado");
 		}
 
-		ShoppingProduct shoppingProduct = new ShoppingProduct();
-		shoppingProduct.setProduct(product);
-		shoppingProduct.setQuantity(quantity);
-		shoppingProduct.setShoppingCart(shoppingCart);
-		shoppingProduct.setShprId(0);
-		totalShoppingProduct = Long.valueOf(product.getPrice() * quantity);
-		shoppingProduct.setTotal(totalShoppingProduct);
+		shoppingProduct = shoppingProductService.getShprByCarPro(carId, proId);
 
-		shoppingProduct = shoppingProductService.save(shoppingProduct);
+		if (shoppingProduct == null) {
+			shoppingProduct = new ShoppingProduct();
+			shoppingProduct.setProduct(product);
+			shoppingProduct.setQuantity(quantity);
+			shoppingProduct.setShoppingCart(shoppingCart);
+			shoppingProduct.setShprId(0);
+			totalShoppingProduct = Long.valueOf(product.getPrice() * quantity);
+			shoppingProduct.setTotal(totalShoppingProduct);
+			shoppingProduct = shoppingProductService.save(shoppingProduct);
+		} else {
+			cantidadShpr = shoppingProduct.getQuantity() + quantity;
+			totalShoppingProduct = Long.valueOf(product.getPrice() * cantidadShpr);
+			shoppingProduct.setQuantity(cantidadShpr);
+			shoppingProduct.setTotal(totalShoppingProduct);
+			shoppingProduct = shoppingProductService.update(shoppingProduct);
+		}
 
 		totalShoppingCart = shoppingProductService.totalShoppingProductByShoppingCart(carId);
 		itemsShoppingCart = shoppingProductService.totalItems(carId);
-
 		shoppingCart.setTotal(totalShoppingCart);
 		shoppingCart.setItems(itemsShoppingCart);
 		shoppingCartService.update(shoppingCart);
@@ -128,7 +138,7 @@ public class CartServiceImpl implements CartService {
 	public void removeProduct(Integer carId, String proId) throws Exception {
 		ShoppingCart shoppingCart = null;
 		Product product = null;
-		List<Integer> shprsId = null;
+		ShoppingProduct shoppingProduct = null;
 		Long totalShoppingCart = 0L;
 		Integer itemsShoppingCart = 0;
 		if (carId == null || carId <= 0) {
@@ -154,18 +164,11 @@ public class CartServiceImpl implements CartService {
 		if (product.getEnable().equals("N") == true) {
 			throw new Exception("El product esta inhabilitado");
 		}
-
-		shprsId = shoppingProductService.getShprId(carId, proId);
-		if (shprsId.isEmpty() == true || shprsId == null) {
+		shoppingProduct = shoppingProductService.getShprByCarPro(carId, proId);
+		if (shoppingProduct == null) {
 			throw new Exception("No hay ningun shoppingProduct con carId: " + carId + " y proId: " + proId);
 		}
-		shprsId.forEach(shprId -> {
-			try {
-				shoppingProductService.deleteById(shprId);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		shoppingProductService.delete(shoppingProduct);
 		totalShoppingCart = shoppingProductService.totalShoppingProductByShoppingCart(carId);
 		itemsShoppingCart = shoppingProductService.totalItems(carId);
 		if (totalShoppingCart == null || itemsShoppingCart == null) {
@@ -277,7 +280,6 @@ public class CartServiceImpl implements CartService {
 		if (paymentMethod.getEnable().equals("N") == true) {
 			throw new Exception("El paymentMethod esta inhabilitado");
 		}
-		shoppingCart.setEnable("N");
 		shoppingCart.setPaymentMethod(paymentMethod);
 		shoppingCartService.update(shoppingCart);
 		return shoppingCart;
