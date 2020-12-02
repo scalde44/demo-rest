@@ -110,6 +110,19 @@ public class CartController {
 		return ResponseEntity.ok().body(shoppingCartDTOs);
 
 	}
+	
+	@GetMapping("/findShcaByPayIdNull/{email}")
+	public ResponseEntity<?> findShcaByPayIdNull(@PathVariable("email") String email) throws Exception {
+
+		List<ShoppingCart> shoppingCarts = cartService.findShcaByPayIdNull(email);
+		if (shoppingCarts.isEmpty() == true || shoppingCarts == null) {
+			return ResponseEntity.ok().body(null);
+		}
+		List<ShoppingCartDTO> shoppingCartDTOs = shoppingCartMapper.toListShoppingCartDTO(shoppingCarts);
+
+		return ResponseEntity.ok().body(shoppingCartDTOs);
+
+	}
 
 	@PutMapping("/finalizarCompra")
 	public ResponseEntity<?> finalizarCompra(@Valid @RequestBody FinalizarCompraDTO finalizarCompraDTO)

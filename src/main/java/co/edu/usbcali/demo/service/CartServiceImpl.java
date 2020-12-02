@@ -14,6 +14,7 @@ import co.edu.usbcali.demo.domain.PaymentMethod;
 import co.edu.usbcali.demo.domain.Product;
 import co.edu.usbcali.demo.domain.ShoppingCart;
 import co.edu.usbcali.demo.domain.ShoppingProduct;
+import co.edu.usbcali.demo.repository.ShoppingCartRepository;
 
 @Service
 @Scope("singleton")
@@ -24,6 +25,9 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	ShoppingCartService shoppingCartService;
+	
+	@Autowired
+	ShoppingCartRepository shoppingCartRepository;
 
 	@Autowired
 	ProductService productService;
@@ -283,6 +287,27 @@ public class CartServiceImpl implements CartService {
 		shoppingCart.setPaymentMethod(paymentMethod);
 		shoppingCartService.update(shoppingCart);
 		return shoppingCart;
+	}
+
+	@Override
+	public List<ShoppingCart> findShcaByPayIdNull(String email) throws Exception{
+		Customer customer = null;
+
+		if (email == null || email.isBlank() == true) {
+			throw new Exception("El email del cliente es nulo");
+		}
+
+		Optional<Customer> customerOptional = customerService.findById(email);
+		if (customerOptional.isPresent() == false) {
+			throw new Exception("No existe un customer con el email: " + email);
+		}
+
+		customer = customerOptional.get();
+
+		if (customer.getEnable() == null || customer.getEnable().equals("N") == true) {
+			throw new Exception("El cliente con email: " + email + " no esta habilitado");
+		}
+		return shoppingCartRepository.findShcaByPayIdNull(email);
 	}
 
 }

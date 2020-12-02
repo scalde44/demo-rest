@@ -159,4 +159,6 @@ public class ShoppingProductServiceImpl implements ShoppingProductService {
 	public ShoppingProduct getShprByCarPro(Integer carId, String proId) {
 		return shoppingProductRepository.getShprByCarPro(carId, proId);
 	}
+
+	
 }

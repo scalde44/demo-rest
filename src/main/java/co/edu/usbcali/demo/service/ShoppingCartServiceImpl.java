@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.edu.usbcali.demo.domain.Product;
 import co.edu.usbcali.demo.domain.ShoppingCart;
 import co.edu.usbcali.demo.repository.ShoppingCartRepository;
 
@@ -113,5 +114,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 	public List<ShoppingCart> findShcaByEmail(String email) {
 		return shoppingCartRepository.findShcaByEmail(email);
 	}
+
+	@Override
+	public List<Product> findProductsByCarId(Integer carId) {
+		return shoppingCartRepository.findProductsByCarId(carId);
+	}
+
+	@Override
+	public List<ShoppingCart> findShcaByPayIdNull(String email) {
+		return shoppingCartRepository.findShcaByPayIdNull(email);
+	}
+
+
+	
+
+	
 
 }

@@ -15,5 +15,7 @@ public interface ShoppingProductService extends GenericService<ShoppingProduct, 
 	public List<Integer> getShprIdByCarId(Integer carId);
 
 	public List<ShoppingProduct> findShprByCarId(Integer carId);
+	
+	
 
 }

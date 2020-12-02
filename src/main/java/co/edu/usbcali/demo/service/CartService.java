@@ -20,4 +20,6 @@ public interface CartService {
 	public List<ShoppingCart> findShoppingCartByEmail(String email) throws Exception;
 
 	public ShoppingCart finalizarCompra(Integer carId, Integer payId) throws Exception;
+	
+	public List<ShoppingCart> findShcaByPayIdNull(String email) throws Exception;
 }
