@@ -120,4 +120,9 @@ public class ProductServiceImpl implements ProductService {
 		return productRepository.count();
 	}
 
+	@Override
+	public List<Product> findByLikeName(String name) throws Exception {
+		return productRepository.findByLikeName(name);
+	}
+
 }

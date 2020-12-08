@@ -15,10 +15,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- * @author Zathura Code Generator http://zathuracode.org/ www.zathuracode.org
- *
- */
 @Entity
 @Table(name = "payment_method", schema = "public")
 public class PaymentMethod implements java.io.Serializable {

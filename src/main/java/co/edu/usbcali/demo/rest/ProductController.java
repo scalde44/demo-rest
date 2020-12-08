@@ -87,4 +87,15 @@ public class ProductController {
 		ProductDTO productDTO = productMapper.toProductDTO(product);
 		return ResponseEntity.ok().body(productDTO);
 	}
+
+	@GetMapping("/findByLikeName/{name}")
+	public ResponseEntity<?> findByLikeName(@PathVariable("name") String name) throws Exception {
+
+		List<Product> products = productService.findByLikeName(name);
+		if (products.isEmpty() || products == null) {
+			return ResponseEntity.ok().body(null);
+		}
+		List<ProductDTO> productDTOs = productMapper.toProductDTOs(products);
+		return ResponseEntity.ok().body(productDTOs);
+	}
 }

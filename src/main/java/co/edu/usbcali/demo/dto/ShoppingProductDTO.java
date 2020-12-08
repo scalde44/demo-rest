@@ -21,6 +21,25 @@ public class ShoppingProductDTO {
 	@NotNull
 	private Integer productPrice;
 
+	
+	public ShoppingProductDTO() {
+		super();
+	}
+
+	public ShoppingProductDTO(@NotNull Integer quantity, @NotNull Integer shprId, @NotNull Long total,
+			@NotNull String productId, @NotNull Integer shoppingCartId, @NotNull String productName,
+			@NotNull String productImage, @NotNull Integer productPrice) {
+		super();
+		this.quantity = quantity;
+		this.shprId = shprId;
+		this.total = total;
+		this.productId = productId;
+		this.shoppingCartId = shoppingCartId;
+		this.productName = productName;
+		this.productImage = productImage;
+		this.productPrice = productPrice;
+	}
+
 	public Integer getQuantity() {
 		return quantity;
 	}

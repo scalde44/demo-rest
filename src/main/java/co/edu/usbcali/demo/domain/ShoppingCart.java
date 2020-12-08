@@ -15,10 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
-/**
- * @author Zathura Code Generator http://zathuracode.org/ www.zathuracode.org
- *
- */
 @Entity
 @Table(name = "shopping_cart", schema = "public")
 public class ShoppingCart implements java.io.Serializable {
